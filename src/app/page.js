@@ -1,10 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from './lib/supabase';
 import Image from 'next/image';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { v4 as uuidv4 } from 'uuid'; // Add this for unique user_id
 
 export default function Home() {
   const [formData, setFormData] = useState({
@@ -16,6 +17,7 @@ export default function Home() {
     qualification: '',
     time_slot: '',
     class_days: '',
+    user_id: '',
   });
   const [file, setFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
@@ -60,6 +62,16 @@ export default function Home() {
     'Mon-Wed-Fri',
     'Tue-Thu-Sat',
   ];
+
+  useEffect(() => {
+    // Generate or retrieve user_id from localStorage
+    let userId = localStorage.getItem('user_id');
+    if (!userId) {
+      userId = uuidv4(); // Generate unique ID
+      localStorage.setItem('user_id', userId);
+    }
+    setFormData((prev) => ({ ...prev, user_id: userId }));
+  }, []);
 
   const validateForm = () => {
     const newErrors = {};
@@ -121,7 +133,7 @@ export default function Home() {
       picUrl = supabase.storage.from('student-pics').getPublicUrl(fileName).data.publicUrl;
     }
 
-    // Save form data
+    // Save form data with user_id
     const { error } = await supabase.from('students').insert({
       ...formData,
       pic_url: picUrl,
@@ -140,6 +152,7 @@ export default function Home() {
         qualification: '',
         time_slot: '',
         class_days: '',
+        user_id: formData.user_id, // Keep same user_id
       });
       setFile(null);
       setPreviewUrl(null);
