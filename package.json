@@ -11,6 +11,8 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.50.5",
     "html2pdf.js": "^0.10.3",
+    "jspdf": "^2.5.1",
+  "html2canvas": "^1.4.1",
     "next": "15.3.5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

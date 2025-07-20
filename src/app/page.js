@@ -5,7 +5,8 @@ import { supabase } from './lib/supabase';
 import Image from 'next/image';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { v4 as uuidv4 } from 'uuid'; // Add this for unique user_id
+import { v4 as uuidv4 } from 'uuid';
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
   const [formData, setFormData] = useState({
@@ -22,52 +23,51 @@ export default function Home() {
   const [file, setFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [errors, setErrors] = useState({});
+  const router = useRouter();
 
-  // Course options
   const courses = [
     {
       category: 'Web Development',
       options: [
-        { value: 'AI Frontend Development', label: 'AI Frontend Development (2 months)' },
-        { value: 'AI Backend Development', label: 'AI Backend Development (2 months)' },
-        { value: 'UI Development (HTML, CSS, Bootstrap)', label: 'UI Development (HTML, CSS, Bootstrap) (2 months)' },
-        { value: 'Introduction to Programming', label: 'Introduction to Programming (2 months)' },
-        { value: 'Full Stack Web Development', label: 'Full Stack Web Development (6 months)' },
+        // { value: 'AI Frontend Development', label: 'AI Frontend Development (2 months)' },
+        // { value: 'AI Backend Development', label: 'AI Backend Development (2 months)' },
+        // { value: 'UI/UX Design', label: 'UI/UX Design (2 months)' },
+        // { value: 'Intro to Programming', label: 'Intro to Programming (2 months)' },
+        { value: 'Full-Stack Web Development', label: 'Full-Stack Web Development (6 months)' },
         { value: 'Gen AI', label: 'Gen AI (2 months)' },
+        { value: 'MS Office', label: 'MS Office (2 months)' },
+        { value: 'Graphic Design', label: 'Graphic Design (4 months)' },
       ],
     },
     {
       category: 'English Language',
       options: [
         { value: 'Basic English', label: 'Basic English (2 months)' },
-        { value: 'Advanced English', label: 'Advanced English (2 months)' },
+        // { value: 'Advanced English', label: 'Advanced English (2 months)' },
         { value: 'Business English', label: 'Business English (2 months)' },
       ],
     },
   ];
 
-  // Time slots (3:00 PM to 10:00 PM)
   const timeSlots = [
-    '3:00 PM - 4:00 PM',
-    '4:00 PM - 5:00 PM',
-    '5:00 PM - 6:00 PM',
-    '6:00 PM - 7:00 PM',
+    // '3:00 PM - 4:00 PM',
+    // '4:00 PM - 5:00 PM',
+    // '5:00 PM - 6:00 PM',
+    // '6:00 PM - 7:00 PM',
     '7:00 PM - 8:00 PM',
     '8:00 PM - 9:00 PM',
     '9:00 PM - 10:00 PM',
   ];
 
-  // Class days
   const classDays = [
     'Mon-Wed-Fri',
     'Tue-Thu-Sat',
   ];
 
   useEffect(() => {
-    // Generate or retrieve user_id from localStorage
     let userId = localStorage.getItem('user_id');
     if (!userId) {
-      userId = uuidv4(); // Generate unique ID
+      userId = uuidv4();
       localStorage.setItem('user_id', userId);
     }
     setFormData((prev) => ({ ...prev, user_id: userId }));
@@ -96,7 +96,6 @@ export default function Home() {
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
-      // Check file size (1MB = 1,048,576 bytes)
       if (selectedFile.size > 1048576) {
         setErrors({ ...errors, file: 'Image size must be less than 1MB' });
         toast.error('Image size must be less than 1MB', { position: 'top-right', autoClose: 3000 });
@@ -117,7 +116,6 @@ export default function Home() {
       return;
     }
 
-    // Image upload
     let picUrl = '';
     if (file) {
       const fileExt = file.name.split('.').pop();
@@ -133,7 +131,6 @@ export default function Home() {
       picUrl = supabase.storage.from('student-pics').getPublicUrl(fileName).data.publicUrl;
     }
 
-    // Save form data with user_id
     const { error } = await supabase.from('students').insert({
       ...formData,
       pic_url: picUrl,
@@ -142,7 +139,11 @@ export default function Home() {
     if (error) {
       toast.error('Error saving data: ' + error.message, { position: 'top-right', autoClose: 3000 });
     } else {
-      toast.success('Student registered successfully!', { position: 'top-right', autoClose: 3000 });
+      toast.success('Student registered successfully!', {
+        position: 'top-right',
+        autoClose: 3000,
+        onClose: () => router.push('/students'),
+      });
       setFormData({
         name: '',
         course_name: '',
@@ -152,7 +153,7 @@ export default function Home() {
         qualification: '',
         time_slot: '',
         class_days: '',
-        user_id: formData.user_id, // Keep same user_id
+        user_id: formData.user_id,
       });
       setFile(null);
       setPreviewUrl(null);
@@ -160,24 +161,30 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-700 flex items-center justify-center p-4">
-      <div className="bg-gray-800/80 backdrop-blur-lg p-8 rounded-2xl shadow-2xl w-full max-w-3xl animate-fade-in">
+    <div className="min-h-screen bg-gray-200 p-8">
+      <style jsx>{`
+        @media print {
+          .bg-teal-500 {
+            background-color: #14b8a6 !important;
+            -webkit-print-color-adjust: exact;
+            color-adjust: exact;
+          }
+        }
+      `}</style>
+      <div className="bg-white border rounded-2xl shadow-lg p-8 max_OVERFLOW_ max-w-3xl mx-auto">
         <div className="flex justify-center mb-8">
-          <Image
-            src="/navtech-logo.png" // Replace with your NavTech logo URL
-            alt="NavTech Logo"
-            width={180}
-            height={60}
-            className="object-contain"
-          />
+          <h1 className="font-extrabold text-yellow-500 text-4xl">NavTech</h1>
         </div>
-        <h1 className="text-3xl font-bold text-center text-white mb-8">
-          NavTech Student Registration
+        <div className="flex justify-center border rounded-xl mx-auto py-1 bg-gray-100 mb-8 max-w-sm">
+          <h2 className="font-extrabold text-teal-500 text-sm">Learning Never Stops!</h2>
+        </div>
+        <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">
+          Student Registration
         </h1>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div>
-              <label htmlFor="name" className="block text-gray-200 text-sm font-medium mb-2">
+              <label htmlFor="name" className="block text-gray-800 text-sm font-medium mb-2">
                 Full Name
               </label>
               <input
@@ -187,12 +194,12 @@ export default function Home() {
                 value={formData.name}
                 onChange={handleChange}
                 placeholder="Enter your name"
-                className="w-full p-3 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200 hover:scale-[1.02]"
+                className="w-full p-3 bg-white text-gray-800 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 transition duration-200"
               />
               {errors.name && <p className="text-red-400 text-xs mt-1">{errors.name}</p>}
             </div>
             <div>
-              <label htmlFor="course_name" className="block text-gray-200 text-sm font-medium mb-2">
+              <label htmlFor="course_name" className="block text-gray-800 text-sm font-medium mb-2">
                 Course
               </label>
               <select
@@ -200,13 +207,13 @@ export default function Home() {
                 name="course_name"
                 value={formData.course_name}
                 onChange={handleChange}
-                className="w-full p-3 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200 hover:scale-[1.02]"
+                className="w-full p-3 bg-white text-gray-800 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 transition duration-200"
               >
                 <option value="" className="text-gray-400">Select a Course</option>
                 {courses.map((category) => (
-                  <optgroup key={category.category} label={category.category} className="text-gray-200">
+                  <optgroup key={category.category} label={category.category} className="text-gray-800">
                     {category.options.map((course) => (
-                      <option key={course.value} value={course.value} className="text-gray-200">
+                      <option key={course.value} value={course.value} className="text-gray-800">
                         {course.label}
                       </option>
                     ))}
@@ -218,7 +225,7 @@ export default function Home() {
               )}
             </div>
             <div>
-              <label htmlFor="mobile_number" className="block text-gray-200 text-sm font-medium mb-2">
+              <label htmlFor="mobile_number" className="block text-gray-800 text-sm font-medium mb-2">
                 Mobile Number
               </label>
               <input
@@ -228,14 +235,14 @@ export default function Home() {
                 value={formData.mobile_number}
                 onChange={handleChange}
                 placeholder="Enter mobile number"
-                className="w-full p-3 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200 hover:scale-[1.02]"
+                className="w-full p-3 bg-white text-gray-800 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 transition duration-200"
               />
               {errors.mobile_number && (
                 <p className="text-red-400 text-xs mt-1">{errors.mobile_number}</p>
               )}
             </div>
             <div>
-              <label htmlFor="email" className="block text-gray-200 text-sm font-medium mb-2">
+              <label htmlFor="email" className="block text-gray-800 text-sm font-medium mb-2">
                 Email Address
               </label>
               <input
@@ -245,12 +252,12 @@ export default function Home() {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="Enter email address"
-                className="w-full p-3 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200 hover:scale-[1.02]"
+                className="w-full p-3 bg-white text-gray-800 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 transition duration-200"
               />
               {errors.email && <p className="text-red-400 text-xs mt-1">{errors.email}</p>}
             </div>
             <div>
-              <label htmlFor="qualification" className="block text-gray-200 text-sm font-medium mb-2">
+              <label htmlFor="qualification" className="block text-gray-800 text-sm font-medium mb-2">
                 Qualification
               </label>
               <input
@@ -260,14 +267,14 @@ export default function Home() {
                 value={formData.qualification}
                 onChange={handleChange}
                 placeholder="Enter qualification"
-                className="w-full p-3 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200 hover:scale-[1.02]"
+                className="w-full p-3 bg-white text-gray-800 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 transition duration-200"
               />
               {errors.qualification && (
                 <p className="text-red-400 text-xs mt-1">{errors.qualification}</p>
               )}
             </div>
             <div>
-              <label htmlFor="time_slot" className="block text-gray-200 text-sm font-medium mb-2">
+              <label htmlFor="time_slot" className="block text-gray-800 text-sm font-medium mb-2">
                 Time Slot
               </label>
               <select
@@ -275,11 +282,11 @@ export default function Home() {
                 name="time_slot"
                 value={formData.time_slot}
                 onChange={handleChange}
-                className="w-full p-3 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200 hover:scale-[1.02]"
+                className="w-full p-3 bg-white text-gray-800 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 transition duration-200"
               >
                 <option value="" className="text-gray-400">Select a Time Slot</option>
                 {timeSlots.map((slot) => (
-                  <option key={slot} value={slot} className="text-gray-200">
+                  <option key={slot} value={slot} className="text-gray-800">
                     {slot}
                   </option>
                 ))}
@@ -289,7 +296,7 @@ export default function Home() {
               )}
             </div>
             <div>
-              <label htmlFor="class_days" className="block text-gray-200 text-sm font-medium mb-2">
+              <label htmlFor="class_days" className="block text-gray-800 text-sm font-medium mb-2">
                 Class Days
               </label>
               <select
@@ -297,11 +304,11 @@ export default function Home() {
                 name="class_days"
                 value={formData.class_days}
                 onChange={handleChange}
-                className="w-full p-3 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200 hover:scale-[1.02]"
+                className="w-full p-3 bg-white text-gray-800 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 transition duration-200"
               >
                 <option value="" className="text-gray-400">Select Class Days</option>
                 {classDays.map((days) => (
-                  <option key={days} value={days} className="text-gray-200">
+                  <option key={days} value={days} className="text-gray-800">
                     {days}
                   </option>
                 ))}
@@ -312,7 +319,7 @@ export default function Home() {
             </div>
           </div>
           <div>
-            <label className="block text-gray-200 text-sm font-medium mb-2">Gender</label>
+            <label className="block text-gray-800 text-sm font-medium mb-2">Gender</label>
             <div className="flex space-x-6">
               {['Male', 'Female'].map((option) => (
                 <label key={option} className="flex items-center space-x-2">
@@ -322,16 +329,16 @@ export default function Home() {
                     value={option}
                     checked={formData.gender === option}
                     onChange={handleChange}
-                    className="text-blue-400 focus:ring-blue-400 h-4 w-4"
+                    className="text-teal-500 focus:ring-teal-500 h-4 w-4"
                   />
-                  <span className="text-gray-200">{option}</span>
+                  <span className="text-gray-800">{option}</span>
                 </label>
               ))}
             </div>
             {errors.gender && <p className="text-red-400 text-xs mt-1">{errors.gender}</p>}
           </div>
           <div>
-            <label htmlFor="file" className="block text-gray-200 text-sm font-medium mb-2">
+            <label htmlFor="file" className="block text-gray-800 text-sm font-medium mb-2">
               Profile Picture
             </label>
             <input
@@ -339,7 +346,7 @@ export default function Home() {
               type="file"
               onChange={handleFileChange}
               accept="image/*"
-              className="w-full p-3 bg-gray-700 text-white border border-gray-600 rounded-lg file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-blue-500 file:text-white file:hover:bg-blue-600 transition duration-200"
+              className="w-full p-3 bg-white text-gray-800 border border-gray-300 rounded-lg file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-teal-500 file:text-white file:hover:bg-teal-600 transition duration-200"
             />
             {errors.file && <p className="text-red-400 text-xs mt-1">{errors.file}</p>}
             {previewUrl && (
@@ -349,14 +356,14 @@ export default function Home() {
                   alt="Preview"
                   width={120}
                   height={120}
-                  className="rounded-full object-cover border-2 border-blue-400"
+                  className="rounded-full object-cover border-4 border-yellow-500"
                 />
               </div>
             )}
           </div>
           <button
             type="submit"
-            className="w-full p-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 shadow-md hover:shadow-lg hover:scale-[1.02]"
+            className="w-full p-3 bg-teal-500 text-white rounded-lg hover:bg-teal-600 transition duration-300 shadow-md"
           >
             Register Student
           </button>
@@ -371,7 +378,7 @@ export default function Home() {
           pauseOnFocusLoss
           draggable
           pauseOnHover
-          theme="dark"
+          theme="light"
         />
       </div>
     </div>
