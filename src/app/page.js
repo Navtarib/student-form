@@ -8,6 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { v4 as uuidv4 } from 'uuid';
 import { useRouter } from 'next/navigation';
 
+
 export default function Home() {
   const [formData, setFormData] = useState({
     name: '',
@@ -27,24 +28,24 @@ export default function Home() {
 
   const courses = [
     {
-      category: 'Web Development',
+      category: 'Computer Courses',
       options: [
         // { value: 'AI Frontend Development', label: 'AI Frontend Development (2 months)' },
         // { value: 'AI Backend Development', label: 'AI Backend Development (2 months)' },
         // { value: 'UI/UX Design', label: 'UI/UX Design (2 months)' },
         // { value: 'Intro to Programming', label: 'Intro to Programming (2 months)' },
-        { value: 'Full-Stack Web Development', label: 'Full-Stack Web Development (6 months)' },
-        { value: 'Gen AI', label: 'Gen AI (2 months)' },
+        { value: 'Web Development', label: 'Web Development (6 months)' },
+        // { value: 'Gen AI', label: 'Gen AI (2 months)' },
         { value: 'MS Office', label: 'MS Office (2 months)' },
-        { value: 'Graphic Design', label: 'Graphic Design (4 months)' },
+        // { value: 'Graphic Design', label: 'Graphic Design (4 months)' },
       ],
     },
     {
       category: 'English Language',
       options: [
-        { value: 'Basic English', label: 'Basic English (2 months)' },
+        { value: 'Beginner', label: 'Beginner English (2 months)' },
         // { value: 'Advanced English', label: 'Advanced English (2 months)' },
-        { value: 'Business English', label: 'Business English (2 months)' },
+        { value: 'English Conversation', label: 'English Conversation (2 months)' },
       ],
     },
   ];
