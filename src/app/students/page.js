@@ -98,16 +98,19 @@ export default function Students() {
             -webkit-print-color-adjust: exact;
             color-adjust: exact;
           }
+          .print-button {
+            display: none !important;
+          }
         }
       `}</style>
-      <div className="flex justify-center items-center max-w-6xl mx-auto mb-6">
+      <div className="flex justify-center items-center max-w-6xl mx-auto sm:mb-10 mb-6">
         <h1 className="text-4xl font-bold text-center text-gray-800">
           Student ID Card
         </h1>
       </div>
       <div className="grid grid-cols-1 gap-8 max-w-6xl mx-auto">
         {students.map((student) => (
-          <div key={student.id} className="sm:flex-row flex flex-col gap-4 mx-auto">
+          <div key={student.id} className="sm:flex-row flex flex-col gap-4 sm:gap-10 mx-auto">
             <div className="bg-white border w-[250px] h-auto rounded-2xl shadow-lg overflow-hidden">
               <div className="bg-teal-500 h-4 w-full rounded-t-2xl"></div>
               <div className="p-4 text-center">
@@ -133,7 +136,6 @@ export default function Students() {
               <div className="bg-teal-500 h-4 w-full rounded-b-2xl"></div>
             </div>
             <div className="bg-white border text-sm relative w-[250px] h-auto rounded-2xl shadow-lg overflow-hidden">
-              {/* <div className="absolute top-40 left-2 text-gray-100 text-6xl">NavTech</div> */}
               <div className="bg-teal-500 h-4 w-full rounded-t-2xl"></div>
               <div className="p-4">
                 <p className="text-gray-800"><strong>Name:</strong>  {student.name}</p>
@@ -152,10 +154,22 @@ export default function Students() {
         ))}
         <button
           onClick={handlePrint}
-          className="bg-teal-500 mx-auto text-white w-44 px-4 py-2 rounded-lg hover:bg-teal-600 transition-colors"
+          className="bg-teal-500 mx-auto text-white w-44 px-4 py-2 rounded-lg hover:bg-teal-600 transition-colors print-button"
         >
-          Download Card
+          Save Card
         </button>
+        <p className='mt-6'
+  style={{
+    fontFamily: "'Noto Nastaliq Urdu', serif",
+    color: '#ef4444',
+    fontSize: '14px',
+    textAlign: 'center',
+    fontWeight: 'bold',
+    textShadow: '1px 1px 2px rgba(0,0,0,0.2)',
+  }}
+>
+  براہِ کرم کارڈ ڈاؤن لوڈ کرنے کے بعد ادارے سے تصدیق کے لیے اسٹامپ لازمی لگوائیں تاکہ آپ کا داخلہ یقینی بنایا جا سکے۔
+</p>
       </div>
     </div>
   );

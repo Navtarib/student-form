@@ -172,11 +172,11 @@ export default function Home() {
         }
       `}</style>
       <div className="bg-white border rounded-2xl shadow-lg p-8 max_OVERFLOW_ max-w-3xl mx-auto">
-        <div className="flex justify-center mb-8">
+        <div className="flex justify-center mb-4">
           <h1 className="font-extrabold text-yellow-500 text-4xl">NavTech</h1>
         </div>
-        <div className="flex justify-center border rounded-xl mx-auto py-1 bg-gray-100 mb-8 max-w-sm">
-          <h2 className="font-extrabold text-teal-500 text-sm">Learning Never Stops!</h2>
+        <div className="flex justify-center mx-auto mb-8 max-w-sm">
+          <h2 className="font-extrabold border border-black p-1 px-2 rounded-2xl text-teal-500 text-sm">Learning Never Stops!</h2>
         </div>
         <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">
           Student Registration
